@@ -1,0 +1,14 @@
+{
+  "name": "lmat.jq.tmpl",
+  "version": "1.0.0",
+  "description": "_jQuery Templates is no longer in active development, and will be superseded by <a href=\"http://github.com/borismoore/jsrender\">JsRender</a>. See vBeta1.0.0 tag for released beta version. Requires jQuery version 1.4.2._",
+  "main": "jquery.tmpl.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "drek",
+  "license": "ISC"
+}

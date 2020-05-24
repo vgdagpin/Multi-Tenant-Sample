@@ -1,0 +1,257 @@
+﻿@using MultiTenantSample.Application.Personnels.Commands
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $('document').ready(function () {
+            $('#ddlTenant').on('change', function (e) {
+                $.ajaxSetup({
+                    headers: {
+                        TenantId: $(this).val()
+                    }
+                });
+
+                $('#btnCreate').prop('disabled', false);
+                loadList();
+            });
+
+            $('form').on('submit', function (e) {
+                if (!$(this).valid())
+                    return false;
+
+                var _data = {};
+                $.map($(this).serializeArray(), function (k) {
+                    _data[k.name] = k.value;
+                });
+
+                $.ajax({
+                    type: $('form').attr('method'),
+                    url: '/Personnel',
+                    contentType: 'application/json',
+                    data: JSON.stringify(_data),
+                    success: function (r) {
+                        loadList();
+
+                        $('#PersonnelModal').modal('hide');
+                    },
+                    fail: function (err) {
+                        console.log(err);
+                    }
+                });
+
+                return false;
+            });
+
+            $('#btnConfirmDelete').on('click', function () {
+                var _dataEntryID = $(this).attr('data-entry-id');
+
+                $.ajax({
+                    url: '/Personnel',
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ ID: _dataEntryID }),
+                    success: function (r) {
+                        loadList();
+
+                        $('#ConfirmDelete').modal('hide');
+                    },
+                    fail: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+        });
+
+        function loadList() {
+            var _tblBody = $('#t_personnel tbody');
+
+            $.tmpl($('#tmp_EmptyRow').html(), { Message: 'Loading..' }).appendTo(_tblBody);
+
+            $.get('/Personnel')
+                .done(function (r) {
+                    _tblBody.empty();
+
+                    if (r.length == 0) {
+                        $.tmpl($('#tmp_EmptyRow').html(), { Message: 'No data found' }).appendTo(_tblBody);
+                    } else {
+                        for (var i = 0; i < r.length; i++) {
+                            $.tmpl($('#tmp_Row').html(), r[i]).appendTo(_tblBody);
+                        }
+                    }
+                })
+                .fail(function (err) {
+                    console.log(err);
+                });
+        }
+    </script>
+
+    <!-- data assignment to modal fields -->
+    <script type="text/javascript">
+        $('#ConfirmDelete').on('show.bs.modal', function (event) {
+            var _modal = $(this),
+                _btn = $(event.relatedTarget);
+
+            _modal.find('#btnConfirmDelete').attr('data-entry-id', _btn.data('entryId'));
+        });
+
+        $('#PersonnelModal').on('show.bs.modal', function (event) {
+            var _modal = $(this),
+                _btn = $(event.relatedTarget);
+
+            if (_btn.data('action') == 'Create') {
+                _modal.find('.modal-title').text('Create Personnel');
+                _modal.find('button[type=submit]').text('Create Personnel');
+                _modal.find('form').attr('method', 'POST');
+            } else {
+                _modal.find('.modal-title').text('Update Personnel Detail');
+                _modal.find('button[type=submit]').text('Update Details');
+
+                _modal.find('input[name=ID]').val(_btn.data('entryId'));
+
+                _modal.find('form').attr('method', 'PUT');
+            }
+
+            _modal.find('input[name=FirstName]').val(_btn.data('firstname'));
+            _modal.find('input[name=MiddleName]').val(_btn.data('middlename'));
+            _modal.find('input[name=LastName]').val(_btn.data('lastname'));
+            _modal.find('input[name=Birthdate]').val($.format.date((_btn.data('birthdate') ?? new Date()), 'yyyy-MM-dd'));
+            _modal.find('select[name=Gender]').val(_btn.data('gender'));
+        });
+    </script>
+    <!-- data assignment to modal fields -->
+
+    <script id="tmp_Row" type="text/template">
+        <tr>
+            <td>${FirstName}</td>
+            <td>${MiddleName}</td>
+            <td>${LastName}</td>
+            <td>${$.format.date(BirthDate, 'MMM dd, yyyy')}</td>
+            <td>${Gender}</td>
+            <td>
+                <button class="btn btn-primary" type="button" data-action="Update" data-toggle="modal" data-target="#PersonnelModal"
+                        data-entry-id="${ID}"
+                        data-firstname="${FirstName}"
+                        data-middlename="${MiddleName}"
+                        data-lastname="${LastName}"
+                        data-birthdate="${BirthDate}"
+                        data-gender="${Gender}">
+                    <i class="fa fa-edit"></i>
+                </button>
+
+                <button class="btn btn-warning ml-1" type="button" data-toggle="modal" data-target="#ConfirmDelete"
+                        data-entry-id="${ID}">
+                    <i class="fa fa-remove"></i>
+                </button>
+            </td>
+        </tr>
+    </script>
+
+    <script id="tmp_EmptyRow" type="text/template">
+        <tr>
+            <td colspan="6" class="text-center">${Message}</td>
+        </tr>
+    </script>
+}
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col">
+            <select id="ddlTenant">
+                <option>-- Please Select Tenant --</option>
+                <option value="1">Tenant 1</option>
+                <option value="2">Tenant 2</option>
+            </select>
+            <hr>
+            <button id="btnCreate" class="btn btn-primary pull-right mb-2" disabled type="button" data-action="Create" data-toggle="modal" data-target="#PersonnelModal"><i class="fa fa-plus mr-1"></i>Create</button>
+
+            <div class="table-responsive">
+                <table id="t_personnel" class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Birthdate</th>
+                            <th>Gender</th>
+                            <th style="width: 100px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6" class="text-center">Select Tenant</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Start: Confirm Delete Modal -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="ConfirmDelete">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Delete Entry</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Continue to delete this entry?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-light" type="button" data-dismiss="modal">Cancel</button>
+                            <button id="btnConfirmDelete" class="btn btn-primary" type="button">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End: Confirm Delete Modal -->
+            <!-- Start: Personnel Details Modal -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="PersonnelModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Personnel</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            @{
+                                @model CreatePersonnelCommand
+                            }
+
+                            <form asp-controller="Personnel">
+                                <input name="ID" type="hidden" />
+                                <div class="form-group">
+                                    <label>First Name:</label>
+                                    <input asp-for="FirstName" class="form-control" type="text" placeholder="Please enter first name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Middle Name:</label>
+                                    <input asp-for="MiddleName" class="form-control" type="text" placeholder="Please enter middle name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name:</label>
+                                    <input asp-for="LastName" class="form-control" type="text" placeholder="Please enter last name">
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Birthdate:</label>
+                                            <input asp-for="Birthdate" class="form-control" type="date">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Gender:</label>
+                                            <select asp-for="Gender" class="form-control"><option value="Male">Male</option><option value="Female">Female</option></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <button class="btn btn-primary" type="submit">Create Personnel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End: Personnel Details Modal -->
+        </div>
+    </div>
+</div>

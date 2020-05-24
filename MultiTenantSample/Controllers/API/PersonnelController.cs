@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using MultiTenantSample.Application.Personnels.Commands;
 using MultiTenantSample.Application.Personnels.Queries;
 using MultiTenantSample.Application.Personnels.Queries.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace MultiTenantSample.Api.Controllers
+namespace MultiTenantSample.Controllers.API
 {
     [ApiController]
     [Route("[controller]")]
@@ -60,6 +59,16 @@ namespace MultiTenantSample.Api.Controllers
             await dbContext.SaveChangesAsync();
 
             return _entry.Id;
+        }
+
+        [HttpDelete]
+        public async Task Update(DeletePersonnelCommand command)
+        {
+            await mediator.Send(command);
+
+            // called savechanges outside CQRS to omit manual Transaction in code
+            // SaveChanges is already transactional
+            await dbContext.SaveChangesAsync();
         }
     }
 }

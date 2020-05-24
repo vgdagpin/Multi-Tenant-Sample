@@ -35,7 +35,7 @@ namespace MultiTenantSample.Application.Personnels.Queries
                         FirstName = a.FirstName,
                         MiddleName = a.MiddleName,
                         LastName = a.LastName,
-                        DOB = a.DOB,
+                        BirthDate = a.DOB,
                         Gender = a.GenderFk.Name
                     });
             }

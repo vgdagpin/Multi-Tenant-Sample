@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MultiTenantSample.Api.Middlewares
+namespace MultiTenantSample.Middlewares
 {
     public class DetermineTenantMiddleware
     {

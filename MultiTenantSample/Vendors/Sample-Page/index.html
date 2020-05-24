@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Sample-Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col">
+                <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">-- Please select tenant --</button>
+                    <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">1</a><a class="dropdown-item" role="presentation" href="#">2</a></div>
+                </div>
+                <hr><button class="btn btn-primary pull-right mb-2" type="button" data-toggle="modal" data-target="#PersonnelModal"><i class="fa fa-plus mr-1"></i>Create</button>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Birthdate</th>
+                                <th>Gender</th>
+                                <th style="width: 100px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cell 1</td>
+                                <td>Cell 2</td>
+                                <td>Cell 2</td>
+                                <td>Cell 2</td>
+                                <td>Cell 2</td>
+                                <td><button class="btn btn-primary" type="button" data-toggle="modal" data-target="#PersonnelModal"><i class="fa fa-edit"></i></button><button class="btn btn-warning ml-1" type="button" data-toggle="modal" data-target="#ConfirmDelete"><i class="fa fa-remove"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start: Confirm Delete Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="ConfirmDelete">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Entry</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body">
+                    <p>Continue to delete this entry?</p>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Cancel</button><button class="btn btn-primary" type="button">Yes</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- End: Confirm Delete Modal -->
+    <!-- Start: Personnel Details Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="PersonnelModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create Personnel</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group"><input class="form-control" type="text" placeholder="Please enter first name"></div>
+                        <div class="form-group"><input class="form-control" type="text" placeholder="Please enter middle name"></div>
+                        <div class="form-group"><input class="form-control" type="text" placeholder="Please enter last name"></div>
+                        <div class="form-group"><input class="form-control" type="date"></div>
+                        <div class="form-group"><select class="form-control"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                        <hr><button class="btn btn-primary" type="submit">Create Personnel</button></form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End: Personnel Details Modal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
