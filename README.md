@@ -8,6 +8,12 @@ ___
 
 Below is the example process for Multi-Tenancy application for (**Column Based**)
 
+**Setup**
+1. Open *Package Manager Console*
+2. Set default project to **Migrations\MultiTenantSample.DbMigration**
+3. Type-in *Update-Database*
+4. Run **MultiTenantSample**
+
 **Process**
 
 1. Ajax send request (GET, POST, PUT , DELETE) 
