@@ -56,6 +56,8 @@ public class DetermineTenantMiddleware
 }
 ```
 4. Validate/Process request with CQRS (Command/Query)
+   > Im not using Repository Pattern since EF DbContext already act as repository so it will be redundant and time consuming for development
+   > I am using Clean Architecture + CQRS (check Clean Architecture with ASP.NET Core | Jason Taylor on YouTube)
 ``` CSharp
 public class GetPersonnelQuery : IRequest<IQueryable<PersonnelBO>>
 {
